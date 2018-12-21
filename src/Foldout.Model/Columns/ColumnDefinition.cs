@@ -1,7 +1,7 @@
-﻿using Foldout.Core.Events;
-using System;
+﻿using System;
+using System.Runtime.CompilerServices;
 
-namespace Foldout.Core.Columns
+namespace Foldout.Model.Columns
 {
     public abstract class ColumnDefinition
     {
@@ -14,6 +14,17 @@ namespace Foldout.Core.Columns
             ColumnValueType = columnValueType;
             Title = title;
         }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(obj, this);
+        }
+
+        public override int GetHashCode()
+        {
+            return RuntimeHelpers.GetHashCode(this);
+        }
+
     }
 
     public abstract class ColumnDefinition<T> : ColumnDefinition where T : ColumnValue 

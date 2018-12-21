@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Foldout.Core.Columns;
-using Foldout.Core.Events;
+using System.Runtime.CompilerServices;
+using Foldout.Model.Columns;
+using Foldout.Model.Events;
 
-namespace Foldout.Core {
+namespace Foldout.Model {
     public class Row
     {
         /// <summary>
@@ -14,9 +15,8 @@ namespace Foldout.Core {
 
         public Row ParentRow { get; private set; }
 
-        public readonly Dictionary<ColumnDefinition, ColumnValue> RowValues;
+        public readonly Dictionary<ColumnDefinition, ColumnValue> RowValues = new Dictionary<ColumnDefinition, ColumnValue>();
 
-        //todo do we actually need this accessor?
         public ColumnValue this[ColumnDefinition columnDefinition] => RowValues[columnDefinition];
 
         public IReadOnlyList<Row> Children => _children.AsReadOnly();
@@ -27,7 +27,6 @@ namespace Foldout.Core {
             _outline = outline;
             ParentRow = parent;
 
-            RowValues = new Dictionary<ColumnDefinition, ColumnValue>();
             foreach(var col in columnDefinitions)
             {
                 RowValues.Add(col, (ColumnValue)Activator.CreateInstance(col.ColumnValueType));
@@ -75,6 +74,16 @@ namespace Foldout.Core {
             var previousData = GetValue<T>(columnDefinition);
             RowValues[columnDefinition].Data = value;
             _outline.FireRowDataChanged(new RowDataChangedEventArgs<T>(this, previousData, value));
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(obj, this);
+        }
+
+        public override int GetHashCode()
+        {
+            return RuntimeHelpers.GetHashCode(this);
         }
     }
 }

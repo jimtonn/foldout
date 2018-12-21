@@ -1,4 +1,4 @@
-﻿namespace Foldout.Core.Events
+﻿namespace Foldout.Model.Events
 {
     public class RowAddedEventArgs
     {

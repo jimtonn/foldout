@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Foldout.Core;
-using Foldout.Core.Columns;
+﻿using Foldout.Model.Columns;
 
-namespace Tests.Foldout.Core
+namespace Tests.Foldout.Model
 {
     class TestColumnValue : ColumnValue
     {
-
+        public override object Clone()
+        {
+            return new TestColumnValue() { Data = this.Data };
+        }
     }
 
     class TestColumnDefinition : ColumnDefinition<TestColumnValue>

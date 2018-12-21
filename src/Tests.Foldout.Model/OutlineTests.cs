@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using Foldout.Core;
-using Foldout.Core.Events;
+using Foldout.Model;
+using Foldout.Model.Events;
 using Xunit;
 
-namespace Tests.Foldout.Core
+namespace Tests.Foldout.Model
 {
     public class OutlineTests
     {

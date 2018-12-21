@@ -1,6 +1,6 @@
-﻿using Foldout.Core.Columns;
+﻿using Foldout.Model.Columns;
 
-namespace Foldout.Core.Events
+namespace Foldout.Model.Events
 {
     public class ColumnTitleChangedEventArgs
     {

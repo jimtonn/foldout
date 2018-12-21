@@ -1,4 +1,4 @@
-﻿namespace Foldout.Core.Columns
+﻿namespace Foldout.Model.Columns
 {
     public class TextColumnDefinition : ColumnDefinition<TextColumnValue>
     {
