@@ -25,9 +25,10 @@ namespace Foldout.Model.Columns
             return RuntimeHelpers.GetHashCode(this);
         }
 
+        public object DefaultValue;
     }
 
-    public abstract class Column<T> : Column where T : ColumnValue 
+    public abstract class Column<T> : Column
     {
         public Column(string title = null) : base(typeof(T), title)
         {

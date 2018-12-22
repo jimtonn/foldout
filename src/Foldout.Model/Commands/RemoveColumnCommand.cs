@@ -6,7 +6,7 @@ namespace Foldout.Model.Commands
     public class RemoveColumnCommand : ICommand
     {
         private readonly Column _column;
-        private Dictionary<Row, ColumnValue> _removedValues;
+        private Dictionary<Row, object> _removedValues;
 
         public RemoveColumnCommand(Column column)
         {
@@ -15,11 +15,11 @@ namespace Foldout.Model.Commands
 
         public void Do(Outline outline)
         {
-            _removedValues = new Dictionary<Row, ColumnValue>();
+            _removedValues = new Dictionary<Row, object>();
 
-            foreach (var row in outline.EachRow())
+            foreach (var row in outline.EachRow)
             {
-                _removedValues.Add(row, (ColumnValue)row[_column].Clone());
+                _removedValues.Add(row, row[_column]);
             }
 
             outline.RemoveColumn(_column);

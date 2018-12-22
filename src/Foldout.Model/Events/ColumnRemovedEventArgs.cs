@@ -13,12 +13,12 @@ namespace Foldout.Model.Events
         /// Note that this can contain large amounts of data (which may be necessary to store for undo/redo
         /// operations), and references to these eventargs should be removed when possible.
         /// </summary>
-        public IReadOnlyDictionary<Row, ColumnValue> RowValues { get; }
+        public IReadOnlyDictionary<Row, object> RowValues { get; }
 
-        public ColumnRemovedEventArgs(Column column, IDictionary<Row, ColumnValue> rowValues)
+        public ColumnRemovedEventArgs(Column column, IDictionary<Row, object> rowValues)
         {
             Column = column;
-            RowValues = new ReadOnlyDictionary<Row, ColumnValue>(rowValues);
+            RowValues = new ReadOnlyDictionary<Row, object>(rowValues);
         }
     }
 }

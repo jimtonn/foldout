@@ -6,9 +6,9 @@ namespace Foldout.Model.Commands
     public class AddColumnAndRestoreDataCommand : ICommand
     {
         private readonly Column _column;
-        private readonly IDictionary<Row, ColumnValue> _columnValues;
+        private readonly IDictionary<Row, object> _columnValues;
 
-        public AddColumnAndRestoreDataCommand(Column column, IDictionary<Row, ColumnValue> columnValues)
+        public AddColumnAndRestoreDataCommand(Column column, IDictionary<Row, object> columnValues)
         {
             _column = column;
             _columnValues = columnValues;

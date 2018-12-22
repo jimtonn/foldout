@@ -29,16 +29,16 @@ namespace Foldout.Model
         /// </summary>
         /// <param name="column"></param>
         /// <param name="columnValues"></param>
-        public void AddColumn(Column column, IDictionary<Row, ColumnValue> columnValues = null)
+        public void AddColumn(Column column, IDictionary<Row, object> columnValues = null)
         {
             if (RootRow.RowValues.ContainsKey(column))
             {
                 throw new InvalidOperationException("Column already added to outline.");
             }
 
-            foreach(var row in EachRow().Concat(new[] { RootRow }))
+            foreach(var row in EachRow.Concat(new[] { RootRow }))
             {
-                row.RowValues.Add(column, (ColumnValue)Activator.CreateInstance(column.ColumnValueType));
+                row.RowValues.Add(column, column.DefaultValue);
                 if (columnValues != null)
                 {
                     //todo unit test the scenario where we are supplying data here
@@ -55,11 +55,11 @@ namespace Foldout.Model
                 throw new InvalidOperationException("Column not added to outline.");
             }
 
-            var removedValues = new Dictionary<Row, ColumnValue>();
+            var removedValues = new Dictionary<Row, object>();
 
-            foreach (var row in EachRow().Concat(new[] { RootRow }))
+            foreach (var row in EachRow.Concat(new[] { RootRow }))
             {
-                removedValues.Add(row, (ColumnValue)row[column].Clone());
+                removedValues.Add(row, row[column]);
                 row.RowValues.Remove(column);
             }
             ColumnRemoved?.Invoke(this, new ColumnRemovedEventArgs(column, removedValues));
@@ -74,7 +74,7 @@ namespace Foldout.Model
 
         public IEnumerable<Column> Columns => RootRow.RowValues.Keys;
 
-        public Row InsertRow(Row parent, int position, IDictionary<Column, ColumnValue> initialData = null)
+        public Row InsertRow(Row parent, int position, IDictionary<Column, object> initialData = null)
         {
             if (parent == null)
             {
@@ -101,7 +101,7 @@ namespace Foldout.Model
                 }
                 else
                 {
-                    row.RowValues[col] = (ColumnValue)Activator.CreateInstance(col.ColumnValueType);
+                    row.RowValues[col] = col.DefaultValue;
                 }
             }
 
@@ -109,7 +109,7 @@ namespace Foldout.Model
             return row;
         }
 
-        public void ChangeRowData<T>(Row row, Column column, T value) where T : ColumnValue
+        public void ChangeRowData<T>(Row row, Column column, T value)
         {
             var previousValue = row.GetValue<T>(column);
             row.RowValues[column] = value;
@@ -125,7 +125,7 @@ namespace Foldout.Model
             {
                 var lastParentWithIndent = rowsWithIndents.Pop();
                 
-                foreach(var child in lastParentWithIndent.row.Children.Reverse())
+                foreach(var child in lastParentWithIndent.row.Children)
                 {
                     rowsWithIndents.Push((child, lastParentWithIndent.indentLevel+1));
                 }
@@ -142,24 +142,26 @@ namespace Foldout.Model
         /// Does not necessarily return in order. This can be used for internal
         /// operations like adding a column to each row.
         /// </summary>
-        /// <returns></returns>
-        internal IEnumerable<Row> EachRow()
+        internal IEnumerable<Row> EachRow
         {
-            var rowsWithIndents = new Stack<Row>();
-            rowsWithIndents.Push(RootRow);
-
-            while (rowsWithIndents.Any())
+            get
             {
-                var lastParentWithIndent = rowsWithIndents.Pop();
+                var rowsWithIndents = new Stack<Row>();
+                rowsWithIndents.Push(RootRow);
 
-                foreach (var child in lastParentWithIndent.Children)
+                while (rowsWithIndents.Any())
                 {
-                    rowsWithIndents.Push(child);
-                }
+                    var lastParentWithIndent = rowsWithIndents.Pop();
 
-                if (lastParentWithIndent != RootRow)
-                {
-                    yield return lastParentWithIndent;
+                    foreach (var child in lastParentWithIndent.Children)
+                    {
+                        rowsWithIndents.Push(child);
+                    }
+
+                    if (lastParentWithIndent != RootRow)
+                    {
+                        yield return lastParentWithIndent;
+                    }
                 }
             }
         }

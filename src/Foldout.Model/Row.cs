@@ -10,16 +10,16 @@ namespace Foldout.Model {
     {
         public Row ParentRow { get; internal set; }
 
-        public readonly Dictionary<Column, ColumnValue> RowValues = new Dictionary<Column, ColumnValue>();
+        public readonly Dictionary<Column, object> RowValues = new Dictionary<Column, object>();
 
-        public ColumnValue this[Column column] => RowValues[column];
+        public object this[Column column] => RowValues[column];
 
         public IReadOnlyList<Row> Children => _children.AsReadOnly();
         internal readonly List<Row> _children = new List<Row>();
 
         internal Row() { }
 
-        public T GetValue<T>(Column column) => (T)RowValues[column].Data;
+        public T GetValue<T>(Column column) => (T)RowValues[column];
 
         public override bool Equals(object obj)
         {

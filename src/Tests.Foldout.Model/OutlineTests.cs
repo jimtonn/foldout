@@ -242,14 +242,14 @@ namespace Tests.Foldout.Model
 
             using (var scope = outline.Monitor())
             {
-                outline.ChangeRowData(newRow, col, new TestColumnValue { Data = "something new" });
+                outline.ChangeRowData(newRow, col, "something new" );
 
                 scope.Should().Raise(nameof(Outline.RowDataChanged))
                     .WithSender(outline)
-                    .WithArgs<RowDataChangedEventArgs<TestColumnValue>>(args => 
+                    .WithArgs<RowDataChangedEventArgs<string>>(args => 
                         args.Row == newRow
                         && args.PreviousData == null
-                        && args.NewData.Data == "something new");
+                        && args.NewData == "something new");
             }
         }
 
