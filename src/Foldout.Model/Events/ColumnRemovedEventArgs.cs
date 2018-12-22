@@ -6,7 +6,7 @@ namespace Foldout.Model.Events
 {
     public class ColumnRemovedEventArgs
     {
-        public ColumnDefinition ColumnDefinition { get; }
+        public Column Column { get; }
 
         /// <summary>
         /// Contains a clone of the value that each row had for the given column prior to its removal.
@@ -15,9 +15,9 @@ namespace Foldout.Model.Events
         /// </summary>
         public IReadOnlyDictionary<Row, ColumnValue> RowValues { get; }
 
-        public ColumnRemovedEventArgs(ColumnDefinition columnDefinition, IDictionary<Row, ColumnValue> rowValues)
+        public ColumnRemovedEventArgs(Column column, IDictionary<Row, ColumnValue> rowValues)
         {
-            ColumnDefinition = columnDefinition;
+            Column = column;
             RowValues = new ReadOnlyDictionary<Row, ColumnValue>(rowValues);
         }
     }

@@ -4,11 +4,11 @@ namespace Foldout.Model.Events
 {
     public class ColumnAddedEventArgs
     {
-        public ColumnDefinition ColumnDefinition { get; }
+        public Column Column { get; }
 
-        public ColumnAddedEventArgs(ColumnDefinition columnDefinition)
+        public ColumnAddedEventArgs(Column column)
         {
-            ColumnDefinition = columnDefinition;
+            Column = column;
         }
     }
 }

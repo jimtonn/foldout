@@ -1,0 +1,1 @@
+move row insertion to an outline method where you specify the parent. will clean up the event stuff

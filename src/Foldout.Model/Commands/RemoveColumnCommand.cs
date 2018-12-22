@@ -5,29 +5,29 @@ namespace Foldout.Model.Commands
 {
     public class RemoveColumnCommand : ICommand
     {
-        private readonly ColumnDefinition _columnDefinition;
+        private readonly Column _column;
         private Dictionary<Row, ColumnValue> _removedValues;
 
-        public RemoveColumnCommand(ColumnDefinition columnDefinition)
+        public RemoveColumnCommand(Column column)
         {
-            _columnDefinition = columnDefinition;
+            _column = column;
         }
 
         public void Do(Outline outline)
         {
             _removedValues = new Dictionary<Row, ColumnValue>();
 
-            foreach (var row in outline.RootRow.EachRowUnder())
+            foreach (var row in outline.EachRow())
             {
-                _removedValues.Add(row, (ColumnValue)row[_columnDefinition].Clone());
+                _removedValues.Add(row, (ColumnValue)row[_column].Clone());
             }
 
-            outline.RemoveColumnDefinition(_columnDefinition);
+            outline.RemoveColumn(_column);
         }
 
         public ICommand GetReverseCommand()
         {
-            return new AddColumnAndRestoreDataCommand(_columnDefinition, _removedValues);
+            return new AddColumnAndRestoreDataCommand(_column, _removedValues);
         }
     }
 }

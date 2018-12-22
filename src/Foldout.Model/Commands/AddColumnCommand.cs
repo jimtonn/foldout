@@ -4,21 +4,21 @@ namespace Foldout.Model.Commands
 {
     public class AddColumnCommand : ICommand
     {
-        private readonly ColumnDefinition _columnDefinition;
+        private readonly Column _column;
 
-        public AddColumnCommand(ColumnDefinition columnDefinition)
+        public AddColumnCommand(Column column)
         {
-            _columnDefinition = columnDefinition;
+            _column = column;
         }
 
         public void Do(Outline outline)
         {
-            outline.AddColumnDefinition(_columnDefinition);
+            outline.AddColumn(_column);
         }
 
         public ICommand GetReverseCommand()
         {
-            return new RemoveColumnCommand(_columnDefinition);
+            return new RemoveColumnCommand(_column);
         }
     }
 }

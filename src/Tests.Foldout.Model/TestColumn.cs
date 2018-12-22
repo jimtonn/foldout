@@ -10,8 +10,8 @@ namespace Tests.Foldout.Model
         }
     }
 
-    class TestColumnDefinition : ColumnDefinition<TestColumnValue>
+    class TestColumn : Column<TestColumnValue>
     {
-        public TestColumnDefinition(string title) : base(title) { }
+        public TestColumn(string title) : base(title) { }
     }
 }

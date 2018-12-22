@@ -10,19 +10,15 @@ namespace Foldout.Console
         static void Main(string[] args)
         {
             var outline = new Outline();
-            var text = new TextColumnDefinition("Content");
-            var complete = new TextColumnDefinition("Complete");
-            outline.AddColumnDefinition(text);
-            outline.AddColumnDefinition(complete);
-            var n1 = outline.RootRow.InsertEmptyRow(0);
-            var n1_1 = n1.InsertEmptyRow(0);
-            var n1_2 = n1.InsertEmptyRow(1);
-            var n1_2_1 = n1.InsertEmptyRow(0);
-
-            n1[text].Data = "abc";
-            n1[complete].Data = false;
-            n1_1[text].Data = "def";
-            n1_1[complete].Data = true;
+            var text = new TextColumn("Content");
+            var complete = new TextColumn("Complete");
+            outline.AddColumn(text);
+            outline.AddColumn(complete);
+            var n1 = outline.InsertRow(outline.RootRow, 0, new Dictionary<Column, ColumnValue> { { text, new TextColumnValue("this is a row") } });
+            var n1_1 = outline.InsertRow(n1, 0, new Dictionary<Column, ColumnValue> { { text, new TextColumnValue("this is a row too") } });
+            var n1_2 = outline.InsertRow(n1, 1, new Dictionary<Column, ColumnValue> { { text, new TextColumnValue("something") } });
+            var n1_2_1 = outline.InsertRow(n1_2, 0, new Dictionary<Column, ColumnValue> { { text, new TextColumnValue("this is a cool row") } });
+            var n2 = outline.InsertRow(outline.RootRow, 1, new Dictionary<Column, ColumnValue> { { text, new TextColumnValue("this is the bottom row") } });
 
             foreach (var row in outline.RowsWithIndent())
             {

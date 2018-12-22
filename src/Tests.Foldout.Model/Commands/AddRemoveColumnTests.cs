@@ -13,17 +13,17 @@ namespace Tests.Foldout.Model.Commands
         {
             var outline = new Outline();
             var co = new CommandOutline(outline);
-            var colDef = new TestColumnDefinition("column");
+            var col = new TestColumn("column");
 
             var columnCount = outline.RootRow.RowValues.Count;
 
             using (var scope = outline.Monitor())
             {
-                co.RunCommand(new AddColumnCommand(colDef));
+                co.RunCommand(new AddColumnCommand(col));
 
                 scope.Should().Raise(nameof(Outline.ColumnAdded))
                     .WithSender(outline)
-                    .WithArgs<ColumnAddedEventArgs>(args => args.ColumnDefinition == colDef);
+                    .WithArgs<ColumnAddedEventArgs>(args => args.Column == col);
             }
 
             outline.RootRow.RowValues.Count.Should().Be(columnCount + 1);
@@ -34,18 +34,18 @@ namespace Tests.Foldout.Model.Commands
         {
             var outline = new Outline();
             var co = new CommandOutline(outline);
-            var colDef = new TestColumnDefinition("column");
-            outline.AddColumnDefinition(colDef);
+            var col = new TestColumn("column");
+            outline.AddColumn(col);
 
             var columnCount = outline.RootRow.RowValues.Count;
 
             using (var scope = outline.Monitor())
             {
-                co.RunCommand(new RemoveColumnCommand(colDef));
+                co.RunCommand(new RemoveColumnCommand(col));
 
                 scope.Should().Raise(nameof(Outline.ColumnRemoved))
                     .WithSender(outline)
-                    .WithArgs<ColumnRemovedEventArgs>(args => args.ColumnDefinition == colDef);
+                    .WithArgs<ColumnRemovedEventArgs>(args => args.Column == col);
             }
 
             outline.RootRow.RowValues.Count.Should().Be(columnCount - 1);

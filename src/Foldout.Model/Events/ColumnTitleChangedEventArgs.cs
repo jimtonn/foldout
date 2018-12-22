@@ -4,13 +4,13 @@ namespace Foldout.Model.Events
 {
     public class ColumnTitleChangedEventArgs
     {
-        public ColumnDefinition ColumnDefinition { get; }
+        public Column Column { get; }
         public string PreviousTitle { get; }
         public string NewTitle { get; }
 
-        public ColumnTitleChangedEventArgs(ColumnDefinition columnDefinition, string previousTitle, string newTitle)
+        public ColumnTitleChangedEventArgs(Column column, string previousTitle, string newTitle)
         {
-            ColumnDefinition = columnDefinition;
+            Column = column;
             PreviousTitle = previousTitle;
             NewTitle = newTitle;
         }
