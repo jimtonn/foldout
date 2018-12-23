@@ -28,8 +28,8 @@ namespace Foldout.Model
         /// want to restore all of the old data before we notify listeners about the restored column.
         /// </summary>
         /// <param name="column"></param>
-        /// <param name="columnValues"></param>
-        public void AddColumn(Column column, IDictionary<Row, object> columnValues = null)
+        /// <param name="rowValues"></param>
+        public void AddColumn(Column column, IDictionary<Row, object> rowValues = null)
         {
             if (RootRow.RowValues.ContainsKey(column))
             {
@@ -39,10 +39,9 @@ namespace Foldout.Model
             foreach(var row in EachRow.Concat(new[] { RootRow }))
             {
                 row.RowValues.Add(column, column.DefaultValue);
-                if (columnValues != null)
+                if (rowValues != null && rowValues.TryGetValue(row, out object value))
                 {
-                    //todo unit test the scenario where we are supplying data here
-                    row.RowValues[column] = columnValues[row];
+                    row.RowValues[column] = value;
                 }
             }
             ColumnAdded?.Invoke(this, new ColumnAddedEventArgs(column));
@@ -86,7 +85,7 @@ namespace Foldout.Model
                 throw new ArgumentOutOfRangeException();
             }
 
-            var row = new Row()
+            var row = new Row
             {
                 ParentRow = parent
             };
@@ -166,14 +165,62 @@ namespace Foldout.Model
             }
         }
 
-        public void RemoveRowAndChildren()
+        /// <summary>
+        /// Removes the specified row from the outline. A row must have 0 children before
+        /// it can be removed. Callers are responsible for reparenting or removing any
+        /// children prior to a move.
+        /// </summary>
+        public void RemoveRow(Row row)
         {
+            if (row == RootRow)
+            {
+                throw new InvalidOperationException("Root row cannot be removed.");
+            }
 
+            if (row.Children.Any())
+            {
+                throw new InvalidOperationException("Row cannot be removed because it has children.");
+            }
+
+            if (!row.ParentRow.Children.Contains(row))
+            {
+                throw new InvalidOperationException("Row not found. It may have already been removed.");
+            }
+
+            row.ParentRow._children.Remove(row);
+            RowRemoved?.Invoke(this, new RowRemovedEventArgs(row));
         }
 
-        public void RemoveRowKeepChildren()
+        public void ReparentRow(Row row, Row newParent, int position)
         {
+            if (row == null)
+            {
+                throw new ArgumentNullException(nameof(row));
+            }
 
+            if (newParent == null)
+            {
+                throw new ArgumentNullException(nameof(newParent));
+            }
+
+            if (row == RootRow)
+            {
+                throw new InvalidOperationException("Root row cannot be reparented.");
+            }
+
+            row.ParentRow._children.Remove(row);
+
+            if (position < 0 || position > newParent.Children.Count)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            newParent._children.Insert(position, row);
+
+            var previousParent = row.ParentRow;
+            row.ParentRow = newParent;
+
+            RowReparented?.Invoke(this, new RowReparentedEventArgs(row, previousParent, newParent));
         }
     }
 }

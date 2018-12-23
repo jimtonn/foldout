@@ -4,7 +4,8 @@ using System.Linq;
 namespace Foldout.Model.Commands
 {
     /// <summary>
-    /// A wrapper for an Outline that keeps track of history and enables undo and redo operations.
+    /// A wrapper for an Outline that keeps track of history, enables undo and redo operations,
+    /// and provides more complex operations that are built from the basic outline operations.
     /// </summary>
     public class CommandOutline
     {

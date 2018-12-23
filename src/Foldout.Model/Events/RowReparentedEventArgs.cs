@@ -2,11 +2,15 @@
 {
     public class RowReparentedEventArgs
     {
-        public Row Row { get; }
+        public Row ReparentedRow { get; }
+        public Row PreviousParent { get; }
+        public Row NewParent { get; }
 
-        public RowReparentedEventArgs(Row row)
+        public RowReparentedEventArgs(Row reparentedRow, Row previousParent, Row newParent)
         {
-            Row = row;
+            ReparentedRow = reparentedRow;
+            NewParent = newParent;
+            PreviousParent = previousParent;
         }
     }
 }
